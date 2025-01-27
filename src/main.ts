@@ -40,7 +40,7 @@ function addBox() {
 
 function stylizedGrass() {
   const scene = useScene();
-  const grassBlade = new THREE.PlaneGeometry(0.05, 1);
+  const grassBlade = new THREE.PlaneGeometry(0.05, 0.7);
 
   const bladeCount = 30000;
   const grassMaterial = new THREE.ShaderMaterial({
@@ -50,8 +50,12 @@ function stylizedGrass() {
 
         void main() {
             vUv = uv;
-            vec3 transformed = (instanceMatrix * vec4(position, 1.0)).xyz;
-            transformed.x += sin(time + transformed.z * 5.0) * 0.03;
+            vec3 transformed = position;
+            float scaleFactor = mix(1.0, 0.2, uv.y);
+            transformed.x *= scaleFactor;
+            transformed.z *= scaleFactor;
+            transformed.x += sin(time + uv.y * 10.0) * 0.1;
+            transformed = (instanceMatrix * vec4(transformed, 1.0)).xyz;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
         }
     `,
@@ -85,11 +89,11 @@ function stylizedGrass() {
   for (let i = 0; i < bladeCount; i++) {
     dummy.position.set(
       (Math.random() - 0.5) * 10,
-      0,
+      0.3,
       (Math.random() - 0.5) * 10
     );
     dummy.rotation.y = Math.random() * Math.PI;
-    dummy.scale.setScalar(0.5 + Math.random() * 0.5);
+    // dummy.scale.setScalar(0.5 + Math.random() * 0.5);
     dummy.updateMatrix();
     instancedMesh.setMatrixAt(i, dummy.matrix);
   }
