@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js';
 import { TickManager, type TickData } from './controllers/tickManager';
 
 let scene: THREE.Scene,
@@ -47,6 +49,7 @@ export const initEngine = async () => {
   renderer.toneMappingExposure = 1
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
+  await setupEnvMap()
   addOrbitControls()
   const container = document.createElement('div');
   container.id = '_r3d'
@@ -76,7 +79,30 @@ export const initEngine = async () => {
   );
   renderTickManager.startLoop()
 }
+const setupEnvMap = async () => {
+  const pmremGenerator = new PMREMGenerator(renderer);
+  return new Promise<boolean>(resolve => {
+    new RGBELoader()
+      .setDataType(THREE.HalfFloatType)
+      .setPath('hdr/')
+      .load('spaichingen_hill_1k.hdr', 
+      (texture) => {
+        const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+        scene.background = envMap;
+        scene.environment = envMap;
+  
+        texture.dispose();
+        pmremGenerator.dispose();
 
+        resolve(true);
+      },
+      undefined,
+      (err) => {
+        console.error('RGBELoader error: ', err);
+        resolve(false);
+      });
+  })
+}
 const addOrbitControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.update();
