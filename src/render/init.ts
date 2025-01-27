@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import * as dat from 'dat.gui';
+import {GUI} from 'dat.gui';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -9,7 +9,7 @@ import { TickManager, type TickData } from './controllers/tickManager';
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
   renderer: THREE.WebGLRenderer,
-  // gui: dat.GUI,
+  gui: dat.GUI,
   stats: Stats,
   renderWidth: number,
   renderHeight: number,
@@ -33,7 +33,7 @@ export const initEngine = async () => {
 
   camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.01, 1000);
   camera.position.z = 5
-  camera.position.y = 0
+  camera.position.y = 2
   camera.position.x = 0
 
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -53,6 +53,8 @@ export const initEngine = async () => {
   stats = new Stats();
   document.body.appendChild(stats.dom)
 
+  gui = new GUI();
+  gui.domElement.parentElement!.style.zIndex = '10000'
   window.addEventListener(
     'resize',
     () => {
@@ -84,16 +86,12 @@ export const useRenderSize = () => ({ width: renderWidth, height: renderHeight }
 export const useControls = () => controls;
 export const useLoader = () => loader;
 export const useStats = () => stats;
+export const useGui = () => gui;
 export const useTick = (fn: (_: TickData) => void) => {
   if (renderTickManager) {
     const _tick = (e: TickData) => {
       fn(e)
     }
     renderTickManager.on('tick', _tick);
-  }
-}
-export function useThree() {
-  return {
-    initEngine
   }
 }
