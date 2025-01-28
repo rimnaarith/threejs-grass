@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { initEngine, useScene, useTick } from "./render/init";
 import { setupLight } from "./shared/helpers/lightSetup";
 import { useGridHelper } from "./shared/utils";
+import { Grass } from "./shared/helpers/Grass";
 (async () => {
   await initEngine();
 
@@ -11,7 +12,14 @@ import { useGridHelper } from "./shared/utils";
   useGridHelper(20, 20);
   addPlan();
   addBox();
-  // stylizedGrass();
+  stylizedGrass();
+
+  const grass = new Grass()
+  grass.grass.position.x = -2
+  grass.grass.position.z = 0
+  grass.grass.receiveShadow = true
+  grass.grass.castShadow = true
+  useScene().add(grass.grass);
 })();
 
 function addPlan() {
@@ -28,12 +36,12 @@ function addPlan() {
 
 function addBox() {
   const scene = useScene();
-  const geometry = new THREE.BoxGeometry(2, 1.5, 2);
+  const geometry = new THREE.BoxGeometry(2, 2.5, 2);
   const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
   const box = new THREE.Mesh(geometry, material);
   box.castShadow = true;
   box.receiveShadow = true;
-  box.position.y = 1.5 / 2;
+  box.position.y = 2.5 / 2;
   scene.add(box);
 }
 
@@ -76,7 +84,6 @@ function stylizedGrass() {
     grassMaterial,
     bladeCount
   );
-  instancedMesh.castShadow = true; // Grass casts shadows
   instancedMesh.receiveShadow = true;
 
   useTick((data) => {
