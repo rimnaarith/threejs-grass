@@ -11,15 +11,14 @@ import { useGridHelper } from "./shared/utils";
   useGridHelper(20, 20);
   addPlan();
   addBox();
-  stylizedGrass();
+  // stylizedGrass();
 })();
 
 function addPlan() {
   const scene = useScene();
   const geometry = new THREE.PlaneGeometry(10, 10);
   const material = new THREE.MeshLambertMaterial({
-    color: 0x3a5f0b,
-    side: THREE.DoubleSide,
+    color: 0x3a5f0b
   });
   const plan = new THREE.Mesh(geometry, material);
   plan.receiveShadow = true;
