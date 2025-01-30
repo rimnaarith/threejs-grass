@@ -33,10 +33,8 @@ export const initEngine = async () => {
   renderHeight = window.innerHeight;
   renderAspectRatio = renderWidth / renderHeight;
 
-  camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.01, 1000);
-  camera.position.z = 5
-  camera.position.y = 2
-  camera.position.x = 0
+  camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.1, 100);
+  camera.position.set(-1, 1, 5);
 
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(renderWidth, renderHeight);
@@ -48,6 +46,8 @@ export const initEngine = async () => {
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.toneMappingExposure = 1
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  //@ts-ignore
+  renderer.physicallyCorrectLights = true;
 
   await setupEnvMap()
   addOrbitControls()
@@ -88,7 +88,7 @@ const setupEnvMap = async () => {
       .load('spaichingen_hill_1k.hdr', 
       (texture) => {
         const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-        scene.background = envMap;
+        // scene.background = envMap;
         scene.environment = envMap;
   
         texture.dispose();

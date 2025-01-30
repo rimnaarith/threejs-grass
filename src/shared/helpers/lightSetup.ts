@@ -9,11 +9,12 @@ export function setupLight() {
 	scene.add( hemiLight );
 
 	const dirLight = new THREE.DirectionalLight( 0xffffff, 3 );
-	dirLight.position.set( 11, 10, 10 );
+	dirLight.position.set(4, 4, 4);
   dirLight.lookAt(0, 0, 0);
 	dirLight.castShadow = true;
-	dirLight.shadow.camera.near = 0.1;
-	dirLight.shadow.camera.far = 75;
-	dirLight.shadow.camera.top = 5;
+	dirLight.shadow.mapSize.width = 4096;
+  dirLight.shadow.mapSize.height = 4096;
+  dirLight.shadow.camera.near = 2;
+  dirLight.shadow.camera.far = 15;
 	scene.add( dirLight );
 }
