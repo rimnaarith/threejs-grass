@@ -40,8 +40,6 @@ export class TickManager extends EventEmitter {
   startLoop() {
     const renderer = useRenderer();
     const composer = useComposer();
-    const scene = useScene()
-    const camera = useCamera()
     const stats = useStats()
 
     if (!renderer) {

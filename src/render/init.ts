@@ -9,7 +9,6 @@ import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js';
 import { TickManager, type TickData } from './controllers/tickManager';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
