@@ -67,7 +67,7 @@ export class Grass {
             uniform vec3 baseColor;
             uniform vec3 tipColor;
             void main() {
-                vec3 finalColor = mix(tipColor,baseColor, vHeight);
+                vec3 finalColor = mix(tipColor,baseColor, vHeight + 0.2);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
             }
