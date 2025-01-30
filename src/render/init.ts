@@ -34,7 +34,7 @@ export const initEngine = async () => {
   renderAspectRatio = renderWidth / renderHeight;
 
   camera = new THREE.PerspectiveCamera(75, renderAspectRatio, 0.1, 100);
-  camera.position.set(-1, 1, 5);
+  camera.position.set(-3, 1, 4);
 
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(renderWidth, renderHeight);

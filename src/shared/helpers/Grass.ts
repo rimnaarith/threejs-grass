@@ -1,17 +1,25 @@
 import * as THREE from "three";
+import { useGui } from "../../render/init";
 export class Grass {
   grassBlade: THREE.BufferGeometry;
   grassMaterial: THREE.Material;
   mesh: THREE.Mesh;
+  private grassColorProps = {
+		baseColor: "#045604",
+		tipColor: "#4bdf2f",
+	};
   private uniforms = {
     time: { value: 0 },
     windStrength: { value: 0.1 },
     windSpeed: { value: 3.5 },
+    baseColor: { value: new THREE.Color(this.grassColorProps.baseColor)},
+    tipColor: { value: new THREE.Color(this.grassColorProps.tipColor)},
   }
   constructor() {
     this.grassBlade = this.createGrassBlade();
     this.grassMaterial = this.createGrassMaterial();
     this.mesh = new THREE.Mesh(this.grassBlade, this.grassMaterial);
+    this.setupGui();
   }
 
   private createGrassBlade() {
@@ -56,18 +64,26 @@ export class Grass {
         `,
       fragmentShader: `
             varying float vHeight;
-            
+            uniform vec3 baseColor;
+            uniform vec3 tipColor;
             void main() {
-                // Create gradient from tip to base
-                vec3 baseColor = vec3(0.0, 0.5, 0.0);
-                vec3 tipColor = vec3(0.2, 0.8, 0.2);
-                vec3 finalColor = mix(baseColor, tipColor, vHeight);
+                vec3 finalColor = mix(tipColor,baseColor, vHeight);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
             }
         `,
       side: THREE.DoubleSide,
     });
+  }
+  private setupGui() {
+    const gui = useGui();
+    const grassFolder = gui.addFolder("Grass");
+    grassFolder.addColor(this.grassColorProps, 'baseColor').onChange((value) => {
+			this.uniforms.baseColor.value.set(value);
+		});
+    grassFolder.addColor(this.grassColorProps, 'tipColor').onChange((value) => {
+			this.uniforms.tipColor.value.set(value);
+		});
   }
   public update(deltaTime: number) {
     this.uniforms.time.value += deltaTime;

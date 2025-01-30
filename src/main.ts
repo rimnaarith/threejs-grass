@@ -1,6 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
-import { initEngine, useGui, useScene, useTick } from "./render/init";
+import { initEngine, useScene, useTick } from "./render/init";
 import { setupLight } from "./shared/helpers/lightSetup";
 import { useGridHelper } from "./shared/utils";
 import { Grass } from "./shared/helpers/Grass";
