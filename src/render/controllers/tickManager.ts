@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { useCamera, useRenderer, useScene, useStats } from '../init';
+import { useCamera, useRenderer, useScene, useStats, useComposer } from '../init';
 
 // animation params
 type Frame = XRFrame | null
@@ -39,6 +39,7 @@ export class TickManager extends EventEmitter {
   }
   startLoop() {
     const renderer = useRenderer();
+    const composer = useComposer();
     const scene = useScene()
     const camera = useCamera()
     const stats = useStats()
@@ -59,7 +60,7 @@ export class TickManager extends EventEmitter {
       this.deltaTime = timeDiffCapped / 1000;
       this.lastTimestamp = this.timestamp;
 
-      renderer.render(scene, camera);
+      composer.render();
       this.tick(timestamp, timeDiffCapped, this.fps, frame, this.deltaTime);
 
       stats.update();

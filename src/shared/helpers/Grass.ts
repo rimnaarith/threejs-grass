@@ -98,9 +98,9 @@ export class Grass {
     // Set random positions and rotations
     for (let i = 0; i < instanceCount; i++) {
       dummy.position.set(
-        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 20,
         0,
-        (Math.random() - 0.5) * 10
+        (Math.random() - 0.5) * 20
       );
       dummy.rotation.y = Math.random() * Math.PI * 2;
       dummy.scale.setScalar(0.8 + Math.random() * 0.5);

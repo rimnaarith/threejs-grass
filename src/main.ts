@@ -4,11 +4,13 @@ import { initEngine, useScene, useTick } from "./render/init";
 import { setupLight } from "./shared/helpers/lightSetup";
 import { useGridHelper } from "./shared/utils";
 import { Grass } from "./shared/helpers/Grass";
+import { initSky } from "./shared/helpers/skySetup";
 (async () => {
   await initEngine();
   const scene = useScene();
 
   setupLight();
+  initSky();
 
   useGridHelper(20, 20);
   addPlan();
@@ -23,7 +25,7 @@ import { Grass } from "./shared/helpers/Grass";
 
 function addPlan() {
   const scene = useScene();
-  const geometry = new THREE.PlaneGeometry(10, 10);
+  const geometry = new THREE.PlaneGeometry(20, 20);
   const material = new THREE.MeshLambertMaterial({
     color: 0x045604,
   });

@@ -7,6 +7,9 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js';
 import { TickManager, type TickData } from './controllers/tickManager';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -17,7 +20,9 @@ let scene: THREE.Scene,
   renderHeight: number,
   renderAspectRatio: number,
   controls: OrbitControls,
-  loader: GLTFLoader;
+  loader: GLTFLoader,
+  renderTarget: THREE.WebGLRenderTarget,
+  composer: EffectComposer;
 
 const renderTickManager = new TickManager();
 export const initEngine = async () => {
@@ -48,13 +53,22 @@ export const initEngine = async () => {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
   //@ts-ignore
   renderer.physicallyCorrectLights = true;
-
   await setupEnvMap()
   addOrbitControls()
   const container = document.createElement('div');
   container.id = '_r3d'
   container.appendChild(renderer.domElement);
   document.body.appendChild(container)
+
+  renderTarget = new THREE.WebGLRenderTarget(renderWidth, renderHeight, {
+    samples: 8,
+  });
+  composer = new EffectComposer(renderer, renderTarget);
+  composer.setSize(renderWidth, renderHeight);
+  composer.setPixelRatio(renderer.getPixelRatio());
+
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
 
   stats = new Stats();
   document.body.appendChild(stats.dom)
@@ -74,6 +88,7 @@ export const initEngine = async () => {
       camera.updateProjectionMatrix()
 
       renderer.setSize(renderWidth, renderHeight)
+      composer.setSize(renderWidth, renderHeight)
     },
     false
   );
@@ -116,6 +131,7 @@ export const useControls = () => controls;
 export const useLoader = () => loader;
 export const useStats = () => stats;
 export const useGui = () => gui;
+export const useComposer = () => composer;
 export const useTick = (fn: (_: TickData) => void) => {
   if (renderTickManager) {
     const _tick = (e: TickData) => {
