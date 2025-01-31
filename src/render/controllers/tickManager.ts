@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { useCamera, useRenderer, useScene, useStats, useComposer } from '../init';
+import { useRenderer, useStats, useComposer } from '../init';
 
 // animation params
 type Frame = XRFrame | null
